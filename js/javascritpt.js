@@ -1,3 +1,17 @@
+// Para el HEADER
+{
+    // Para exoandir el header inyectando la clase .header_open_menu al header
+    const header = document.getElementsByTagName("header")[0];
+
+    // Para detectar los clicks en el botón del menú
+    const navMenuButton = document.getElementById("nav_menu_button");
+    navMenuButton.addEventListener("click", function() {
+        header.classList.toggle("header_open_menu");
+    })
+}
+
+
+
 // Para deslizar al dar click a los botones de la sección de redes sociales
 {
     // Botones
