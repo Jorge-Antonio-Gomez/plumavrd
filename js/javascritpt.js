@@ -2,11 +2,71 @@
 {
     // Para exoandir el header inyectando la clase .header_open_menu al header
     const header = document.getElementsByTagName("header")[0];
+    const elementContainer = document.getElementById("element_container");
 
     // Para detectar los clicks en el botón del menú
     const navMenuButton = document.getElementById("nav_menu_button");
+    var buttonState = "closed";
+
     navMenuButton.addEventListener("click", function() {
-        header.classList.toggle("header_open_menu");
+        // Declaración de variables
+        const navMenuButtonImg = navMenuButton.getElementsByTagName("img")[0];
+        let navMenuButtonImgSrc = navMenuButtonImg.getAttribute("src");
+        const elementVisualIdentifier = document.getElementById("element_visual_identifier");
+        const elementContainerNav = elementContainer.querySelector("nav");
+
+        // Para cambiar la imagen del icono
+        if (buttonState == "closed") {
+            navMenuButtonImg.setAttribute("src", "/images/icon_close_menu.svg");
+            navMenuButtonImg.style.margin = "0 1.555rem 0.3rem";
+
+            buttonState = "open";
+        }
+        else if (buttonState == "open") {
+            navMenuButtonImg.setAttribute("src", "/images/icon_burguer_menu.svg");
+            navMenuButtonImg.style.margin = "0 1.5rem 0.3rem";
+
+            buttonState = "closed"
+        }
+        // Caso de emergencia, pero no necesario
+        else {
+            navMenuButtonImg.setAttribute("src", "/images/icon_burguer_menu.svg");
+
+            buttonState = "closed";
+        }
+
+        // Otras condicionales basadas en el estado del botón
+        if (buttonState == "open") {
+            // 1. Para añadir el margin-bottom de 4rem del header
+            header.style.marginBottom = "4rem";
+            
+            // 2. Para añadir el tamaño al elemento de color . element_container
+            elementContainer.style.height = "4rem";
+            elementContainer.style.transition = "all 380ms ease";
+
+            // 3. Para mostrar el identifier
+            elementVisualIdentifier.style.borderBottomWidth = "1rem";
+
+            // 4. Para mostrar el Menú de navegación <nav>
+            elementContainerNav.style.display = "block";
+            elementContainerNav.style.animation = "ease leftSlide 500ms forwards";
+            
+        }
+        else {
+            // 1. Para quitar el margin-bottom de 4rem del header
+            header.style.marginBottom = "0";
+            
+            // 2. Para quitar el tamaño al elemento de color . element_container
+            elementContainer.style.height = "0";
+            elementContainer.style.transition = "all 420ms ease";
+            
+            // 3. Para ocultar el identifier
+            elementVisualIdentifier.style.borderBottomWidth = "0";
+
+            // 4. Para mostrar el Menú de navegación <nav>
+            elementContainerNav.style.animation = "ease showOut 100ms forwards";
+        }
+
     })
 }
 
