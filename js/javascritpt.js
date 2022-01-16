@@ -1,30 +1,32 @@
-// Para el HEADER
+// DEPENDENCIAS
+    // EMPTY
+
+// ESTRUCTURA, FUNCIONAMIENTO Y ESTILOS: Para el HEADER
 {
-    // Para exoandir el header inyectando la clase .header_open_menu al header
+    // Para expandir el header inyectando la clase .header_open_menu al header
     const header = document.getElementsByTagName("header")[0];
     const elementContainer = document.getElementById("element_container");
 
     // Para detectar los clicks en el botón del menú
     const navMenuButton = document.getElementById("nav_menu_button");
     var buttonState = "closed";
-
     navMenuButton.addEventListener("click", function() {
         // Declaración de variables
         const navMenuButtonImg = navMenuButton.getElementsByTagName("img")[0];
-        let navMenuButtonImgSrc = navMenuButtonImg.getAttribute("src");
         const elementVisualIdentifier = document.getElementById("element_visual_identifier");
         const elementContainerNav = elementContainer.querySelector("nav");
+        var windowWidth = window.innerWidth;
 
         // Para cambiar la imagen del icono
         if (buttonState == "closed") {
             navMenuButtonImg.setAttribute("src", "/images/icon_close_menu.svg");
-            navMenuButtonImg.style.margin = "0 1.555rem 0.3rem";
+            navMenuButtonImg.style.margin = "0 2.055rem 0.3rem";
 
             buttonState = "open";
         }
         else if (buttonState == "open") {
             navMenuButtonImg.setAttribute("src", "/images/icon_burguer_menu.svg");
-            navMenuButtonImg.style.margin = "0 1.5rem 0.3rem";
+            navMenuButtonImg.style.margin = "0 2rem 0.3rem";
 
             buttonState = "closed"
         }
@@ -38,10 +40,20 @@
         // Otras condicionales basadas en el estado del botón
         if (buttonState == "open") {
             // 1. Para añadir el margin-bottom de 4rem del header
-            header.style.marginBottom = "4rem";
+            if (windowWidth >= 695) {
+                header.style.marginBottom = "4rem";
+            }
+            else {
+                header.style.marginBottom = "calc(4rem * 5 + 2rem)";
+            }
             
             // 2. Para añadir el tamaño al elemento de color . element_container
-            elementContainer.style.height = "4rem";
+            if (windowWidth >= 695) {
+                elementContainer.style.height = "4rem";
+            }
+            else {
+                elementContainer.style.height = "calc(4rem * 5 + 2rem)";
+            }
             elementContainer.style.transition = "all 380ms ease";
 
             // 3. Para mostrar el identifier
@@ -68,46 +80,179 @@
         }
 
     })
+
+    // Para ajustar el tamaño del menú desplegable si cambia el tamaño de la ventana
+    window.addEventListener("resize", function() {
+        var windowWidth = window.innerWidth;
+        if (buttonState == "open") {
+            if (windowWidth >= 695) {
+                // 1. Para ajustar el margin-bottom de 4rem del header
+                if (header.style.marginBottom != "4rem") {
+                    header.style.marginBottom = "4rem"
+                }
+                
+                // 2. Para ajustar el tamaño al elemento de color . element_container
+                if (elementContainer.style.height != "4rem") {
+                    elementContainer.style.height = "4rem"
+                }
+            }
+            else if (windowWidth < 695) {
+                // 1. Para ajustar el margin-bottom de calc(4rem * 5 + 2rem) del header
+                if (header.style.marginBottom != "calc(4rem * 5 + 2rem)") {
+                    header.style.marginBottom = "calc(4rem * 5 + 2rem)";
+                }
+                
+                // 2. Para ajustar el tamaño al elemento de color . element_container
+                if (elementContainer.style.height != "calc(4rem * 5 + 2rem)") {
+                    elementContainer.style.height = "calc(4rem * 5 + 2rem)";
+                }
+            }
+        }
+        // console.log(buttonState);
+    });
 }
 
-
-
-// Para deslizar al dar click a los botones de la sección de redes sociales
+// ESTRUCTURA Y FUNCIONAMIENTO: Los botones de la sección de redes sociales
 {
-    // Botones
+    // Variables y constantes
+        // Botones
     const leftBttn = document.querySelector("#to_left-bttn");
     const rightBttn = document.querySelector("#to_right-bttn");
         // Contendor a hacer scroll
-    const snetFeed = document.querySelector(".social_networks-feed");
+    const socialNetworksFeed = document.getElementById("social_networks-feed");
+    var actualScroll;
         //Ancho de los cards
-    const card = document.querySelectorAll(".social_networks-feed-card")[0];
+    const feedCards = document.querySelectorAll(".social_networks-feed-card");
+    const feedCard = document.querySelectorAll(".social_networks-feed-card")[0];
     var cardWidth = document.querySelectorAll(".social_networks-feed-card")[0].clientWidth;
-            // Para actualizar el ancho de los cards
+        // Obtener margin de los cards
+    var feedCardMarginRight;
+    let actualPosition = 1;
+    
+    // Función para actualizar el ancho de los cards
     function cardWidthRezise() {
-        cardWidth = card.clientWidth;
-        // console.log(cardWidth);
-    }
-        
-    // Funciones
-    function scrollLeft() {
-        cardWidthRezise()
-        snetFeed.scrollLeft -= cardWidth;
-    }
-    function scrollRight() {
-        cardWidthRezise()
-        snetFeed.scrollLeft += cardWidth;
+        cardWidth = feedCard.clientWidth;
+
+        // Para determinar el valor del margin de los cards
+        feedCardMarginRight = parseFloat(window.getComputedStyle(feedCard).getPropertyValue("margin-right"));
     }
 
-    // Ejecución de las funciones
-    leftBttn.addEventListener('click', function() {
-        scrollLeft()
-    });
-    rightBttn.addEventListener('click', function() {
-        scrollRight()
-    });
+    // Ejecución de las funciones con escuchadores de clicks
+        // Adjuntar el contenido en funciones
+        function leftBttnFn() {
+            cardWidthRezise();
+            socialNetworksFeed.scrollLeft -= cardWidth;
+            
+            // Para determinar la posición del nuevo scroll y para ejecutar la función de cambio de tamaño de contenedor
+            actualScroll = socialNetworksFeed.scrollLeft - (cardWidth + parseFloat(feedCardMarginRight));
+            socialNetworksFeedHeightController(actualScroll);
+        }
+        function rightBttnFn() {
+            cardWidthRezise();
+            socialNetworksFeed.scrollLeft += cardWidth;
+            
+            // Para determinar la posición del nuevo scroll y para ejecutar la función de cambio de tamaño de contenedor
+            actualScroll = socialNetworksFeed.scrollLeft + (cardWidth + parseFloat(feedCardMarginRight));
+            socialNetworksFeedHeightController(actualScroll);
+        }
+
+    leftBttn.addEventListener('click', leftBttnFn);
+    rightBttn.addEventListener('click', rightBttnFn);
+    
+
+    // Ejecución de las funciones con escuchadores de swipe (sólo en dispositivos menores a 695px) // USO DE DEPENDENCIA PARA EL EVENTO SWIPED
+    var listenerValidator = 0;
+        
+        // Añadir listeners de swipe si la pantalla es menor a 695 la primera vez
+        if (window.innerWidth < 695) {
+            // Hacia la derecha
+            socialNetworksFeed.addEventListener('swiped-left', rightBttnFn);
+
+            // Hacia la izquierda
+            socialNetworksFeed.addEventListener('swiped-right', leftBttnFn);
+
+            // Validador
+            listenerValidator = 1;
+        }
+        else {
+            // Validador
+            listenerValidator = 2;
+        }
+
+        // Quitar o agregar los listeners al cambiar el tamaño de la ventana
+        window.addEventListener("resize", function(){
+            if (window.innerWidth < 695) {
+                if (listenerValidator == 1) {
+                        // Validador
+                        listenerValidator = 3;
+                }
+                else if (listenerValidator == 2 || listenerValidator == 4) {
+                    // Hacia la derecha
+                    socialNetworksFeed.addEventListener('swiped-left', rightBttnFn);                  
+                    // Hacia la izquierda
+                    socialNetworksFeed.addEventListener('swiped-right', leftBttnFn);
+
+                        // Validador
+                        listenerValidator = 3;
+                }
+            }
+
+            else if (window.innerWidth >= 695) {
+                if (listenerValidator == 1 || listenerValidator == 3) {
+                    socialNetworksFeed.removeEventListener('swiped-left', rightBttnFn);
+                    socialNetworksFeed.removeEventListener('swiped-right', leftBttnFn);
+
+                        // Validador
+                        listenerValidator = 4;
+                }
+                else if (listenerValidator == 2) {
+                        // Validador
+                        listenerValidator = 4;
+                }
+            }
+        });
+
+    
+    // Para ajustar el contenedor al tamaño de la tarjeta actual
+    // NOTA: ESTO SOLO DEBE OCURRI CUANDO EL ANCHO DE PANTALLA ES MENOR A 695px
+    function socialNetworksFeedHeightController (actualScroll) {
+        if (window.innerWidth < 695) {
+            // Para determinar la pocisión de feed actual y para identificar el card en la pocisión
+            if (actualScroll < 0) {
+                actualPosition = 1;
+            }
+            else if (actualScroll > socialNetworksFeed.scrollWidth) {
+                actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight));
+            }
+            else {
+                actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight) + 1);
+            }
+
+            // Para generar el índice de la posición actual
+            let actualPositionIndex = actualPosition - 1;
+
+            // Para obtener la altura del card actual
+            let actualCard = feedCards[actualPositionIndex];
+            let actualCardHeight = actualCard.clientHeight;
+            let actualCardHeightPX = `${actualCardHeight}px`;
+
+            // Para asignar al contenedor el tamaño de la tarjeta actual
+            setTimeout (function() {
+                socialNetworksFeed.style.height = actualCardHeightPX;
+            }, 400);
+        }
+    }
+
+    // Ajustar el contenedor al tamaño del card inicial una vez que se carga la página // AQUÍ SE USA LA DEPENDENCIA "RESIZE SENSOR"
+    const initialCard = feedCards[0];
+
+    new ResizeSensor(initialCard, function() {
+        actualScroll = -1;
+        socialNetworksFeedHeightController (actualScroll);
+    });    
 }
 
-// Para inyectar rel="noopener noreferrer" a todos los links
+// ESTRUCTURA: Para inyectar rel="noopener noreferrer" a todos los links
 {
     var aLinks = document.getElementsByTagName("a");
     
@@ -118,7 +263,7 @@
     }
 }
 
-// Para cerrar el menú emergente de "Cambiar lenguaje" al dar click fuera del menú
+// ESTILOS: Para cerrar el menú emergente de "Cambiar lenguaje" al dar click fuera del menú
 {
     // Extracción de los elementos del HTML
     const footer = document.querySelector("footer");
@@ -145,7 +290,7 @@
     });
 }
 
-// Para el slider de comunicados
+// ESTRUCTURA Y FUNCIONAMIENTO: Para el slider de comunicados
 {
     // Declaración de constantes iniciales y variables
     const releasesContainer = document.getElementById('releases_container');
@@ -170,6 +315,7 @@
     releasesControllerItems[0].classList.add("active_item");
 
     // Para activar el dot al que se la hace clic
+    
     for (let i = 0; i < releasesControllerItems.length; i++) {
         releasesControllerItems[i].addEventListener("click", function(){
             // Variables temporales
@@ -230,7 +376,22 @@
         }
 
         // Para Añadir el estilo "active_item" al dot que está activo en pantalla
-        releasesControllerItems[actualPositionIndex].classList.add("active_item");
+        if (releasesControllerItems[actualPositionIndex] != null) {
+            releasesControllerItems[actualPositionIndex].classList.add("active_item");
+        }
 
     }, 10000);
+}
+
+// ESTILOS: Para cargar los estilos de transición hasta cargada la página. --> Estilos por clase <--
+{
+    window.onload = function() {
+        // Al header
+        const header = document.getElementsByTagName("header")[0];
+        header.classList.add("transition-400");
+
+        // Al selector visual "#element_visual_identifier"
+        const elementVisualIdentifier = document.getElementById("element_visual_identifier");
+        elementVisualIdentifier.classList.add("transition-400");
+    };
 }

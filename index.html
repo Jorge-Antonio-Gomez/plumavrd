@@ -9,6 +9,10 @@
 
     <!-- Estilos -->
     <link rel="stylesheet" href="/css/style.css">
+    
+    <!-- Dependencias de JavaScript -->
+    <script src="/js/ResizeSensor.js"></script>
+    <script src="/js//swiped-events.js"></script>
 </head>
 <body>
     <header>
@@ -35,6 +39,7 @@
                         <div id="element_container">
                             <nav>
                                 <ul>
+                                    <li class="element order-1"><a class="element_link" href="/">Inicio</a></li>
                                     <li class="element order-2"><a class="element_link" href="#">Quiero Participar</a></li>
                                     <li class="element order-2"><a class="element_link" href="#">Avisos y comunicados</a></li>
                                     <li class="element order-2"><a class="element_link" href="#">Directorio</a></li>
@@ -46,9 +51,16 @@
                     </li>
                 </ul>
             </nav>
+
             <div class="cide">
                 <a href="https://www.cide.edu/" class="image_link" target="blank">
-                    <img src="/images/cide_logo_extended.svg" height="75px" width="auto" alt="Logotipo del CIDE">
+                    <img src="/images/cide_logo.svg" height="75px" width="auto" alt="Logotipo del CIDE">
+                    <p class="cide_name">
+                        Centro de<br>
+                        Investigación<br>
+                        Y Docencia<br>
+                        Económicas
+                    </p>
                 </a>
             </div>
         </div>
@@ -76,11 +88,13 @@
                         </ul>
                     </nav>
 
+                    <img class="principal_screen-logo-1" src="/images/logo_simple_white.svg" alt="Logotipo de Pluma Verde" width="445px" height="auto">
+
                     <p class="content--p">Cómo parte del CIDE es nuestro deber como estudiantes velar por la seguridad y bienestar de la comunidad estudiantil. Eres tú como estudiante o investigador, la voz que debe ser escuchada al momento de la toma de decisiones.</p>
                     <p class="content--big_p">¡En el CIDE escribimos con PLUMA VERDE!</p>
                 </div>
                 <div class="content--right">
-                    <img src="/images/logo_simple_white.svg" alt="Logotipo de Pluma Verde" width="445px" height="auto">
+                    <img class="principal_screen-logo-2" src="/images/logo_simple_white.svg" alt="Logotipo de Pluma Verde" width="445px" height="auto">
                 </div>
             </div>
         </section>
@@ -93,7 +107,7 @@
                 <div class="rounded_bttn" id="to_right-bttn">
                     <img src="/images/arrow_1.svg" width="auto" height="30px" alt="Deslizar hacia la derecha">
                 </div>
-                <div class="social_networks-feed" id="social_networks-feed">
+                <div id="social_networks-feed" class="social_networks-feed" id="social_networks-feed">
                     <div class="social_networks-feed-card">
                         <blockquote class="twitter-tweet"><p lang="es" dir="ltr"><a href="https://twitter.com/ElenaBuylla?ref_src=twsrc%5Etfw">@ElenaBuylla</a> no solo se negó al diálogo, sino que se está saltando a la legalidad por medio del cambio de estatutos del CIDE. <br>Nos esta dejando sin voz y voto en decisiones vinculantes que nos afectan al estudiantado. <a href="https://twitter.com/hashtag/CIDEautonomoYA?src=hash&amp;ref_src=twsrc%5Etfw">#CIDEautonomoYA</a> <a href="https://twitter.com/hashtag/YoDefiendoAlCIDE?src=hash&amp;ref_src=twsrc%5Etfw">#YoDefiendoAlCIDE</a> <a href="https://t.co/X9rb2r6cQ8">pic.twitter.com/X9rb2r6cQ8</a></p>&mdash; Comunidad Estudiantil del CIDE (@plumaverdeORG) <a href="https://twitter.com/plumaverdeORG/status/1481146806092320769?ref_src=twsrc%5Etfw">January 12, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                     </div>
