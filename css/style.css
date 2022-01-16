@@ -450,14 +450,15 @@ h2::before {
 .social_networks-feed {
     min-width: 100%;
     width: auto;
+    height: auto;
 
     display: flex;
     align-items: flex-start;
 
     overflow-x: scroll;
-    overflow-y: scroll;
+    overflow-y: hidden;
     scroll-behavior: smooth;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
     transition: var(--transition-400);
 }
 .rounded_bttn {
@@ -670,6 +671,8 @@ h2::before {
 }
 .releases_controller-item {
     margin: 0.5rem 1.5rem;
+    min-width: 1.6rem;
+    min-height: 1.6rem;
     width: 1.6rem;
     height: 1.6rem;
     
@@ -681,6 +684,8 @@ h2::before {
 }
 .releases_controller .active_item {
     margin: 0 1rem;
+    min-width: 2.6rem;
+    min-height: 2.6rem;
     width: 2.6rem;
     height: 2.6rem;
 }
@@ -929,6 +934,15 @@ footer .conditions {
     }
 
 
+    /* SECTION RELEASES */
+    .releases {
+        padding: 8rem;
+    }
+    .releases h2 {
+        margin-bottom: 3rem;
+    }
+
+
     /* FOOTER */
     .footer_left_content,
     .footer_right_content {
@@ -1060,6 +1074,32 @@ footer .conditions {
     .card-blockquote .card_p:last-child {
         margin-top: 0;
     }
+
+
+    /* SECTION RELEASES */
+    .releases {
+        padding: 6rem 4rem;
+    }
+    .releases h3 {
+        font-size: 2.4rem;
+        margin-bottom: 1.5rem;
+    }
+    .releases p {
+        font-size: 3.2rem;
+    }
+    .releases .releases_item {
+        margin-bottom: 3rem;
+    }
+
+
+    /* CONTENT SECTION */
+    section[class="content"] {
+        padding: 6rem 4rem;
+        width: 100%;
+    }
+    section[class="content"] > section {
+        margin-bottom: 6rem;
+    }
     
 
     /* FOOTER */
@@ -1100,6 +1140,14 @@ footer .conditions {
     h2::before {
         font-size: 2rem;
     }
+    .content p {
+        font-size: 1.8rem;
+    }
+    .button {
+        font-size: 1.4rem;
+    }
+
+
 
     /* HEADER */
     header {
@@ -1322,6 +1370,34 @@ footer .conditions {
         height: 1.8rem;
         filter:brightness(100);
         -webkit-filter: brightness(100);
+    }
+
+
+    /* SECTION RELEASES */
+    .releases {
+        padding: 4rem 3rem;
+    }
+    .releases h3 {
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+    }
+    .releases p {
+        font-size: 2rem;
+    }
+    .releases_controller-item {
+        margin: 0.5rem 1rem;
+    }
+    .releases_controller .active_item {
+        margin: 0 0.5rem;
+    }
+
+
+    /* CONTENT SECTION */
+    section[class="content"] {
+        padding: 4rem 3rem;
+    }
+    section[class="content"] > section {
+        margin-bottom: 4rem;
     }
 
 

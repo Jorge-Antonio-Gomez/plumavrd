@@ -161,85 +161,89 @@
     
 
     // Ejecución de las funciones con escuchadores de swipe (sólo en dispositivos menores a 695px) // USO DE DEPENDENCIA PARA EL EVENTO SWIPED
-    var listenerValidator = 0;
-        
-        // Añadir listeners de swipe si la pantalla es menor a 695 la primera vez
-        if (window.innerWidth < 695) {
-            // Hacia la derecha
-            socialNetworksFeed.addEventListener('swiped-left', rightBttnFn);
-
-            // Hacia la izquierda
-            socialNetworksFeed.addEventListener('swiped-right', leftBttnFn);
-
-            // Validador
-            listenerValidator = 1;
-        }
-        else {
-            // Validador
-            listenerValidator = 2;
-        }
-
-        // Quitar o agregar los listeners al cambiar el tamaño de la ventana
-        window.addEventListener("resize", function(){
-            if (window.innerWidth < 695) {
-                if (listenerValidator == 1) {
-                        // Validador
-                        listenerValidator = 3;
-                }
-                else if (listenerValidator == 2 || listenerValidator == 4) {
-                    // Hacia la derecha
-                    socialNetworksFeed.addEventListener('swiped-left', rightBttnFn);                  
-                    // Hacia la izquierda
-                    socialNetworksFeed.addEventListener('swiped-right', leftBttnFn);
-
-                        // Validador
-                        listenerValidator = 3;
-                }
-            }
-
-            else if (window.innerWidth >= 695) {
-                if (listenerValidator == 1 || listenerValidator == 3) {
-                    socialNetworksFeed.removeEventListener('swiped-left', rightBttnFn);
-                    socialNetworksFeed.removeEventListener('swiped-right', leftBttnFn);
-
-                        // Validador
-                        listenerValidator = 4;
-                }
-                else if (listenerValidator == 2) {
-                        // Validador
-                        listenerValidator = 4;
-                }
-            }
-        });
+    {
+        // var listenerValidator = 0;
+        //            
+        //     // Añadir listeners de swipe si la pantalla es menor a 695 la primera vez
+        //     if (window.innerWidth < 695) {
+        //         // Hacia la derecha
+        //         socialNetworksFeed.addEventListener('swiped-left', rightBttnFn);
+        //
+        //         // Hacia la izquierda
+        //         socialNetworksFeed.addEventListener('swiped-right', leftBttnFn);
+        //
+        //         // Validador
+        //         listenerValidator = 1;
+        //     }
+        //     else {
+        //         // Validador
+        //         listenerValidator = 2;
+        //     }
+        //
+        //     // Quitar o agregar los listeners al cambiar el tamaño de la ventana
+        //     window.addEventListener("resize", function(){
+        //         if (window.innerWidth < 695) {
+        //             if (listenerValidator == 1) {
+        //                     // Validador
+        //                     listenerValidator = 3;
+        //             }
+        //             else if (listenerValidator == 2 || listenerValidator == 4) {
+        //                 // Hacia la derecha
+        //                 socialNetworksFeed.addEventListener('swiped-left', rightBttnFn);                  
+        //                 // Hacia la izquierda
+        //                 socialNetworksFeed.addEventListener('swiped-right', leftBttnFn);
+        //
+        //                     // Validador
+        //                     listenerValidator = 3;
+        //             }
+        //         }
+        //
+        //         else if (window.innerWidth >= 695) {
+        //             if (listenerValidator == 1 || listenerValidator == 3) {
+        //                 socialNetworksFeed.removeEventListener('swiped-left', rightBttnFn);
+        //                 socialNetworksFeed.removeEventListener('swiped-right', leftBttnFn);
+        //
+        //                     // Validador
+        //                     listenerValidator = 4;
+        //             }
+        //             else if (listenerValidator == 2) {
+        //                     // Validador
+        //                     listenerValidator = 4;
+        //             }
+        //         }
+        //     });
+    }
 
     
     // Para ajustar el contenedor al tamaño de la tarjeta actual
-    // NOTA: ESTO SOLO DEBE OCURRI CUANDO EL ANCHO DE PANTALLA ES MENOR A 695px
+    // NOTA: ESTO SOLO DEBE OCURRIR CUANDO EL ANCHO DE PANTALLA ES MENOR A 695px
     function socialNetworksFeedHeightController (actualScroll) {
         if (window.innerWidth < 695) {
             // Para determinar la pocisión de feed actual y para identificar el card en la pocisión
-            if (actualScroll < 0) {
-                actualPosition = 1;
-            }
-            else if (actualScroll > socialNetworksFeed.scrollWidth) {
-                actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight));
-            }
-            else {
-                actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight) + 1);
-            }
+                if (actualScroll < 0) {
+                    actualPosition = 1;
+                }
+                else if (actualScroll > socialNetworksFeed.scrollWidth) {
+                    actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight));
+                }
+                else {
+                    actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight) + 1);
+                }
 
             // Para generar el índice de la posición actual
-            let actualPositionIndex = actualPosition - 1;
+                let actualPositionIndex = actualPosition - 1;
 
             // Para obtener la altura del card actual
-            let actualCard = feedCards[actualPositionIndex];
-            let actualCardHeight = actualCard.clientHeight;
-            let actualCardHeightPX = `${actualCardHeight}px`;
-
+                let actualCard = feedCards[actualPositionIndex];
+                    if (actualCard != null) {
+                var actualCardHeight = actualCard.clientHeight;
+                    }
+                let actualCardHeightPX = `${actualCardHeight}px`;
+            
             // Para asignar al contenedor el tamaño de la tarjeta actual
-            setTimeout (function() {
-                socialNetworksFeed.style.height = actualCardHeightPX;
-            }, 400);
+                setTimeout (function() {
+                    socialNetworksFeed.style.height = actualCardHeightPX;
+                }, 400);
         }
     }
 
@@ -250,6 +254,39 @@
         actualScroll = -1;
         socialNetworksFeedHeightController (actualScroll);
     });    
+    
+    // Ajustar el contenedor al hacer scroll con el dedo
+    var antiRepeaterValue = 0;
+    
+        // Ejecutar pasados 4 segundos de inicializada la página
+        setTimeout(function() {
+            antiRepeaterValue = 1;
+        }, 4000);
+    
+        // Para Añadir el escuchador del Scroll
+        socialNetworksFeed.addEventListener("scroll", function() {
+            // Para definir un temporizador que evita que el listener se ejecute más de una vez por segundo
+            if (antiRepeaterValue == 1) {
+                antiRepeaterValue = 0;
+
+                // Para ejecutar solo cuando la pantalla es pequeña
+                if (window.clientWidth < 695) {
+                    setTimeout(function(){
+                        // Actualizar valores
+                        cardWidthRezise();
+                        actualScroll = socialNetworksFeed.scrollLeft;
+                        console.log("Ahora se va a ejecutar tu maldita función de resize.");
+    
+                        // Ejecutar la función de cambio de altura
+                        socialNetworksFeedHeightController(actualScroll);
+    
+                        // Reestablecimiento de variable de control
+                        antiRepeaterValue = 1;
+                    }, 1000);
+                }
+            }
+        });
+
 }
 
 // ESTRUCTURA: Para inyectar rel="noopener noreferrer" a todos los links
@@ -315,7 +352,7 @@
     releasesControllerItems[0].classList.add("active_item");
 
     // Para activar el dot al que se la hace clic
-    
+
     for (let i = 0; i < releasesControllerItems.length; i++) {
         releasesControllerItems[i].addEventListener("click", function(){
             // Variables temporales
