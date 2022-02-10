@@ -80,12 +80,15 @@
         }
 
     })
-
+    
     // Para ajustar el tamaño del menú desplegable si cambia el tamaño de la ventana
+    // FUNCIONES A EJECUTAR CUANDO CAMBIA EL TAMAÑO DE LA VENTANA (BREAKPOINT: 695PX)
     window.addEventListener("resize", function() {
         var windowWidth = window.innerWidth;
+        
         if (buttonState == "open") {
             if (windowWidth >= 695) {
+
                 // 1. Para ajustar el margin-bottom de 4rem del header
                 if (header.style.marginBottom != "4rem") {
                     header.style.marginBottom = "4rem"
@@ -95,8 +98,10 @@
                 if (elementContainer.style.height != "4rem") {
                     elementContainer.style.height = "4rem"
                 }
+
             }
             else if (windowWidth < 695) {
+
                 // 1. Para ajustar el margin-bottom de calc(4rem * 5 + 2rem) del header
                 if (header.style.marginBottom != "calc(4rem * 5 + 2rem)") {
                     header.style.marginBottom = "calc(4rem * 5 + 2rem)";
@@ -106,6 +111,7 @@
                 if (elementContainer.style.height != "calc(4rem * 5 + 2rem)") {
                     elementContainer.style.height = "calc(4rem * 5 + 2rem)";
                 }
+
             }
         }
         // console.log(buttonState);
@@ -124,7 +130,9 @@
         //Ancho de los cards
     const feedCards = document.querySelectorAll(".social_networks-feed-card");
     const feedCard = document.querySelectorAll(".social_networks-feed-card")[0];
-    var cardWidth = document.querySelectorAll(".social_networks-feed-card")[0].clientWidth;
+    if (feedCard != null) {
+        var cardWidth = document.querySelectorAll(".social_networks-feed-card")[0].clientWidth;
+    }
         // Obtener margin de los cards
     var feedCardMarginRight;
     let actualPosition = 1;
@@ -139,26 +147,124 @@
 
     // Ejecución de las funciones con escuchadores de clicks
         // Adjuntar el contenido en funciones
-        function leftBttnFn() {
-            cardWidthRezise();
-            socialNetworksFeed.scrollLeft -= cardWidth;
+            function leftBttnFn() {
+
+                cardWidthRezise();
+                socialNetworksFeed.scrollLeft -= cardWidth;
+                
+                // Para determinar la posición del nuevo scroll y para ejecutar la función de cambio de tamaño de contenedor
+                actualScroll = socialNetworksFeed.scrollLeft - (cardWidth + parseFloat(feedCardMarginRight));
+                socialNetworksFeedHeightController(actualScroll);
+
+            }
+
+
+            function rightBttnFn() {
+                
+                cardWidthRezise();
+                socialNetworksFeed.scrollLeft += cardWidth;
+                
+                // Para determinar la posición del nuevo scroll y para ejecutar la función de cambio de tamaño de contenedor
+                actualScroll = socialNetworksFeed.scrollLeft + (cardWidth + parseFloat(feedCardMarginRight));
+                socialNetworksFeedHeightController(actualScroll);
+
+            }
+
+
             
-            // Para determinar la posición del nuevo scroll y para ejecutar la función de cambio de tamaño de contenedor
-            actualScroll = socialNetworksFeed.scrollLeft - (cardWidth + parseFloat(feedCardMarginRight));
-            socialNetworksFeedHeightController(actualScroll);
+        // Para activar los escuchadores
+        if (leftBttn != null) {
+            leftBttn.addEventListener('click', leftBttnFn);
         }
-        function rightBttnFn() {
-            cardWidthRezise();
-            socialNetworksFeed.scrollLeft += cardWidth;
-            
-            // Para determinar la posición del nuevo scroll y para ejecutar la función de cambio de tamaño de contenedor
-            actualScroll = socialNetworksFeed.scrollLeft + (cardWidth + parseFloat(feedCardMarginRight));
-            socialNetworksFeedHeightController(actualScroll);
+        if (rightBttn != null) {
+            rightBttn.addEventListener('click', rightBttnFn);
+        }
+    
+
+
+        // Para activar y desactivar los identificadores visuales y estilos de límite (Botones desactivados)
+        {
+            function disableButtons() {
+
+                // Si el scroll está en el inicio
+                    if (socialNetworksFeed.scrollLeft <= 1) {
+                        leftBttn.classList.add("disabled_button");
+                        rightBttn.classList.remove("disabled_button");
+                    } 
+
+                // Si el scroll no está ni en el inicio ni en el final
+                    else if (socialNetworksFeed.scrollLeft > 1 && (socialNetworksFeed.scrollLeft + socialNetworksFeed.clientWidth) < socialNetworksFeed.scrollWidth) {
+                        
+                        // Si el botón izquierdo tiene la clase "disabled_button" hay que removerla
+                        if (leftBttn.getAttribute("class").split(' ')[1] != null) {
+                            leftBttn.classList.remove("disabled_button");
+                        }
+                        
+                        // Si el botón derecho tiene la clase "disabled_button" hay que removerla
+                        if (rightBttn.getAttribute("class").split(' ')[1] != null) {
+                            rightBttn.classList.remove("disabled_button");
+                        }
+                        
+                    }
+                
+                // Si el scroll está en el final
+                    else {
+                        leftBttn.classList.remove("disabled_button");    
+                        rightBttn.classList.add("disabled_button");
+                    }
+            }
+
+
+            var iController = 0;
+                    
+            // Añadir listeners si la pantalla es mayor a 695 la primera vez
+            if (window.innerWidth < 695) {
+                // Validador
+                iController = 1;
+            }
+            else {
+                if (socialNetworksFeed != null) {
+                    socialNetworksFeed.addEventListener("scroll", disableButtons);
+                }
+
+                // Validador
+                iController = 2;
+            }
+        
+            // Quitar o agregar los listeners al cambiar el tamaño de la ventana
+            window.addEventListener("resize", function(){
+                if (window.innerWidth < 695) {
+                    if (iController == 1) {
+                            // Validador
+                            iController = 3;
+                    }
+                    else if (iController == 2 || iController == 4) {
+                        if (socialNetworksFeed != null) {
+                            socialNetworksFeed.removeEventListener("scroll", disableButtons);
+                        }
+        
+                            // Validador
+                            iController = 3;
+                    }
+                }
+        
+                else if (window.innerWidth >= 695) {
+                    if (iController == 1 || iController == 3) {
+                        if (socialNetworksFeed != null) {
+                            socialNetworksFeed.addEventListener("scroll", disableButtons);
+                        }
+        
+                            // Validador
+                            iController = 4;
+                    }
+                    else if (iController == 2) {
+                            // Validador
+                            iController = 4;
+                    }
+                }
+            });
         }
 
-    leftBttn.addEventListener('click', leftBttnFn);
-    rightBttn.addEventListener('click', rightBttnFn);
-    
 
     // Ejecución de las funciones con escuchadores de swipe (sólo en dispositivos menores a 695px) // USO DE DEPENDENCIA PARA EL EVENTO SWIPED
     {
@@ -217,86 +323,92 @@
     
     // Para ajustar el contenedor al tamaño de la tarjeta actual
     // NOTA: ESTO SOLO DEBE OCURRIR CUANDO EL ANCHO DE PANTALLA ES MENOR A 695px
-    function socialNetworksFeedHeightController (actualScroll) {
-        if (window.innerWidth < 695) {
-            // Para determinar la pocisión de feed actual y para identificar el card en la pocisión
-                if (actualScroll < 0) {
-                    actualPosition = 1;
-                }
-                else if (actualScroll > socialNetworksFeed.scrollWidth) {
-                    actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight));
-                }
-                else {
-                    actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight) + 1);
-                }
-
-            // Para generar el índice de la posición actual
-                let actualPositionIndex = actualPosition - 1;
-
-            // Para obtener la altura del card actual
-                let actualCard = feedCards[actualPositionIndex];
-                    if (actualCard != null) {
-                var actualCardHeight = actualCard.clientHeight;
+    {
+        function socialNetworksFeedHeightController(actualScroll) {
+            if (window.innerWidth < 695) {
+                // Para determinar la pocisión de feed actual y para identificar el card en la pocisión
+                    if (actualScroll < 0) {
+                        actualPosition = 1;
                     }
-                let actualCardHeightPX = `${actualCardHeight}px`;
-            
-            // Para asignar al contenedor el tamaño de la tarjeta actual
-                setTimeout (function() {
-                    socialNetworksFeed.style.height = actualCardHeightPX;
-                }, 400);
+                    else if (actualScroll > socialNetworksFeed.scrollWidth) {
+                        actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight));
+                    }
+                    else {
+                        actualPosition = parseInt(actualScroll / (cardWidth + feedCardMarginRight) + 1);
+                    }
+
+                // Para generar el índice de la posición actual
+                    let actualPositionIndex = actualPosition - 1;
+
+                // Para obtener la altura del card actual
+                    let actualCard = feedCards[actualPositionIndex];
+                        if (actualCard != null) { 
+                            var actualCardHeight = actualCard.clientHeight;
+                        }
+                    let actualCardHeightPX = `${actualCardHeight}px`;
+                
+                // Para asignar al contenedor el tamaño de la tarjeta actual
+                    setTimeout (function() {
+                        socialNetworksFeed.style.height = actualCardHeightPX;
+                    }, 400);
+            }
         }
     }
 
     // Ajustar el contenedor al tamaño del card inicial una vez que se carga la página // AQUÍ SE USA LA DEPENDENCIA "RESIZE SENSOR"
-    const initialCard = feedCards[0];
+        // {
+        //     const initialCard = feedCards[0];
 
-    new ResizeSensor(initialCard, function() {
-        actualScroll = -1;
-        socialNetworksFeedHeightController (actualScroll);
-    });    
+        //     new ResizeSensor(initialCard, function() {
+        //         actualScroll = -1;
+        //         socialNetworksFeedHeightController (actualScroll);
+        //     });    
+        // }
     
     // Ajustar el contenedor al hacer scroll con el dedo
-    var antiRepeaterValue = 0;
-    
-        // Ejecutar pasados 4 segundos de inicializada la página
-        setTimeout(function() {
-            antiRepeaterValue = 1;
-        }, 4000);
-    
-        // Para Añadir el escuchador del Scroll
-        socialNetworksFeed.addEventListener("scroll", function() {
-            // Para definir un temporizador que evita que el listener se ejecute más de una vez por segundo
-            if (antiRepeaterValue == 1) {
-                antiRepeaterValue = 0;
+    // {
+    //     var antiRepeaterValue = 0;
+        
+    //     // Ejecutar pasados 4 segundos de inicializada la página
+    //     setTimeout(function() {
+    //         antiRepeaterValue = 1;
+    //     }, 4000);
 
-                // Para ejecutar solo cuando la pantalla es pequeña
-                if (window.clientWidth < 695) {
-                    setTimeout(function(){
-                        // Actualizar valores
-                        cardWidthRezise();
-                        actualScroll = socialNetworksFeed.scrollLeft;
-                        console.log("Ahora se va a ejecutar tu maldita función de resize.");
-    
-                        // Ejecutar la función de cambio de altura
-                        socialNetworksFeedHeightController(actualScroll);
-    
-                        // Reestablecimiento de variable de control
-                        antiRepeaterValue = 1;
-                    }, 1000);
-                }
-            }
-        });
+    //     // Para Añadir el escuchador del Scroll
+    //     socialNetworksFeed.addEventListener("scroll", function() {
+    //         // Para definir un temporizador que evita que el listener se ejecute más de una vez por segundo
+    //         if (antiRepeaterValue == 1) {
+    //             antiRepeaterValue = 0;
 
+    //             // Para ejecutar solo cuando la pantalla es pequeña
+    //             if (window.innerWidth < 695) {
+    //                 // Función de control para ejecutar el cambio de pantalla únicamente tras 1 segundo de no hacer scroll
+                    
+
+    //                 setTimeout(function(){
+    //                     // Actualizar valores
+    //                     cardWidthRezise();
+    //                     actualScroll = socialNetworksFeed.scrollLeft;
+    //                     console.log("Ahora se va a ejecutar tu maldita función de resize.");
+
+    //                     // Ejecutar la función de cambio de altura
+    //                     socialNetworksFeedHeightController(actualScroll);
+
+    //                     // Reestablecimiento de variable de control
+    //                     antiRepeaterValue = 1;
+    //                 }, 1);
+    //             }
+    //         }
+    //     });
+    // }
 }
 
 // ESTRUCTURA: Para inyectar rel="noopener noreferrer" a todos los links
 {
     var aLinks = document.getElementsByTagName("a");
     
-    let i = 0;
-    while (i < aLinks.length) {
+    for (let i = 0; i< aLinks.length; i++) {
         aLinks[i].setAttribute("rel", "noopener noreferrer");
-        i++
     }
 }
 
@@ -335,7 +447,9 @@
     const releasesController = document.getElementById('releases_controller');
     // VAR DEC: Para saber en dónde estoy
     var a = 0;
-    var b = releasesContainer.clientWidth;
+    if (releasesContainer != null) {
+        var b = releasesContainer.clientWidth;
+    }
     var actualPosition = 1;
     var actualPositionIndex = actualPosition - 1;
 
@@ -349,7 +463,9 @@
 
     // Obtener dots del DOM y activar el primero
     const releasesControllerItems = document.querySelectorAll('.releases_controller-item');
-    releasesControllerItems[0].classList.add("active_item");
+    if (releasesControllerItems[0] != null) {
+        releasesControllerItems[0].classList.add("active_item");
+    }
 
     // Para activar el dot al que se la hace clic
 
@@ -381,25 +497,29 @@
 
     // Para activar el siguiente dot de forma automática con temporizador
     setInterval(function() {
-        // VAR DEC: Ancho del contenedor de los releases_item
-        let releasesContainerWidth = releasesContainer.clientWidth;
-        // VAR DEC: Ancho total del contenedor de los releases_item, menos item
-        let releasesContainerFullWidthLess1 = (releasesContainer.clientWidth * (releasesItems.length - 1));
+        if (releasesContainer != null) {
+            // VAR DEC: Ancho del contenedor de los releases_item
+            var releasesContainerWidth = releasesContainer.clientWidth;
 
-
-        // Aplicar posición del scroll en un elemento "item" a la derecha. Y regresar al inicio si estamos en el último elemento 
-        if (releasesContainer.scrollLeft >= releasesContainerFullWidthLess1) {
-            releasesContainer.scrollLeft = 0;
-
-            // Esta variable será usada para saber dónde estoy
-            a = 0;
+            // VAR DEC: Ancho total del contenedor de los releases_item, menos item
+            var releasesContainerFullWidthLess1 = (releasesContainer.clientWidth * (releasesItems.length - 1));
+            
+            // Aplicar posición del scroll en un elemento "item" a la derecha. Y regresar al inicio si estamos en el último elemento 
+            if (releasesContainer.scrollLeft >= releasesContainerFullWidthLess1) {
+                releasesContainer.scrollLeft = 0;
+    
+                // Esta variable será usada para saber dónde estoy
+                a = 0;
+            }
+            else {
+                releasesContainer.scrollLeft += (releasesContainerWidth);
+    
+                // Esta variable será usada para saber dónde estoy
+                a = releasesContainer.scrollLeft + b;
+            }       
         }
-        else {
-            releasesContainer.scrollLeft += (releasesContainerWidth);
 
-            // Esta variable será usada para saber dónde estoy
-            a = releasesContainer.scrollLeft + b;
-        }       
+
 
         // Para saber en dónde estoy
             // DECLARED let a = releasesContainer.scrollLeft;
@@ -420,15 +540,37 @@
     }, 10000);
 }
 
-// ESTILOS: Para cargar los estilos de transición hasta cargada la página. --> Estilos por clase <--
+// ESTILOS
 {
-    window.onload = function() {
-        // Al header
-        const header = document.getElementsByTagName("header")[0];
-        header.classList.add("transition-400");
+    // ESTILOS: Para cargar los estilos de transición hasta cargada la página. --> Estilos por clase <--
+    // window.onload += function() {
+    //     // Al header
+    //     const header = document.getElementsByTagName("header")[0];
+    //     header.classList.add("transition-400");
 
-        // Al selector visual "#element_visual_identifier"
-        const elementVisualIdentifier = document.getElementById("element_visual_identifier");
-        elementVisualIdentifier.classList.add("transition-400");
-    };
+    //     // Al selector visual "#element_visual_identifier"
+    //     const elementVisualIdentifier = document.getElementById("element_visual_identifier");
+    //     elementVisualIdentifier.classList.add("transition-400");
+    // };
+
+    // Ajustar el tamaño de main con respecto al header y al footer
+    {
+        // const main = document.getElementsByTagName("main");
+
+        // let header = document.getElementsByTagName("header")[0];
+        // let footer = document.getElementsByTagName("footer")[0];
+        // let mainHeight = window.innerHeight - parseFloat(window.getComputedStyle(header).getPropertyValue("height")) - parseFloat(window.getComputedStyle(footer).getPropertyValue("height"));
+
+        // main[0].style.minHeight = `${mainHeight}px`;
+
+
+        // // Ajustar el tamaño de section.content con respecto al header y al footer
+        // const sectionContent = main[0].getElementsByClassName("content");
+        // if (sectionContent != null) {
+        //         let actualMainHeight = parseFloat(window.getComputedStyle(main[0]).getPropertyValue("height"));
+    
+        //         sectionContent[0].style.minHeight = `${actualMainHeight}px`;
+        // }
+    }
+
 }

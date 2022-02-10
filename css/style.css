@@ -5,6 +5,8 @@
     --white-light: #f1f1f1;
     --black-text: #434343;
     --cide-green: #245549;
+    --cide-green-light: #5aa08c;
+    --cide-green-dark: #1a4137;
 
     /* Transiciones */
     --transition: all ease 100ms;
@@ -48,8 +50,25 @@ html {
     background: var(--white-light);
 }
 
-body *::selection {
-    background-color: #319b804d;
+html::-webkit-scrollbar-thumb {
+    background: var(--cide-green);
+    border-radius: 5rem;
+    box-shadow: 0 0 0 1px var(--cide-green);
+}
+html::-webkit-scrollbar-thumb:active {
+    background-color: var(--cide-green-dark);
+    box-shadow: 0 0 0 1px var(--cide-green-dark);
+}
+html::-webkit-scrollbar-track-piece {
+    background-color: rgb(206, 206, 206);
+    border-radius: 5rem;
+}
+html::-webkit-scrollbar {
+    background: var(--cide-green);
+}
+
+html *::selection {
+    background-color: #319b804d !important;
 }
 
 body {
@@ -173,6 +192,7 @@ header {
     align-items: center;
     user-select: none;
     position: relative;
+    box-shadow: 0 -0.4rem 0.8rem 0rem var(--cide-green-dark);
 }
 
 
@@ -295,6 +315,16 @@ a .cide_name {
     margin-left: 2rem   ;
 }
 
+
+/* Main */
+main {
+    /* min-height: 50vh; */
+    background-color: #f1f1f1;
+}
+
+
+
+
 /* PRINCIPAL SCREEN */
 .principal_screen {
     width: 100%;
@@ -302,6 +332,8 @@ a .cide_name {
     height: calc(100vh - 14.4rem);
     
     overflow: hidden;
+    z-index: 2;
+    position: relative;
 }
 .principal_screen-background {
     width: 100%;
@@ -421,13 +453,13 @@ a .cide_name {
 }
 
 /* SECTRION CLASS GENERAL */
-h2 {
+.section_title {
     margin-bottom: 40px;
     width: 100%;
     font-size: 3.6rem;
     border-bottom: solid 1px var(--cide-green);
 }
-h2::before {
+.section_title::before {
     content: "# ";
     color: var(--cide-green);
     font-weight: 800;
@@ -472,12 +504,39 @@ h2::before {
     display: flex;
     align-items: center;
     justify-content: center;
-
+    
     user-select: none;
     cursor: pointer;
+    overflow: hidden;
+
+    transform: scale(0%);
+    animation: popIn ease-out 300ms forwards;
 }
+    @keyframes popIn {
+        to {
+            transform: scale(100%);
+        }
+    }
+.disabled_button {
+    pointer-events: none;
+    /* box-shadow: none; */
+
+    transform: scale(100%);
+    animation: popOut ease-in 300ms forwards;
+}
+.disabled_button:hover,
+.disabled_button:active {
+    box-shadow: none;
+}
+    @keyframes popOut {
+        to {
+            transform: scale(0%);
+        }
+    }
 .rounded_bttn img {
     filter: brightness(100);
+    width: auto;
+    height: 40%;
 }
 .rounded_bttn:active {
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
@@ -630,11 +689,11 @@ h2::before {
     align-items: center;
     justify-content: start;
 }
-.releases h2 {
+.releases .section_title {
     border-bottom-color: white;
     color: white;
 }
-.releases h2::before {
+.releases .section_title::before {
     color: white;
 }
 .releases_item h3 {
@@ -938,7 +997,7 @@ footer .conditions {
     .releases {
         padding: 8rem;
     }
-    .releases h2 {
+    .releases .section_title {
         margin-bottom: 3rem;
     }
 
@@ -965,10 +1024,10 @@ footer .conditions {
 @media screen and (max-width: 1459px) {
 
     /* GLOBAL */
-    h2 {
+    .section_title {
         font-size: 2.8rem;
     }
-    h2 ::before {
+    .section_title::before {
         font-size: 2.4rem;
     }
     
@@ -1128,16 +1187,19 @@ footer .conditions {
 
 @media screen and (max-width: 694px){
     /* GLOBAL */
+    html {
+        background-color: var(--cide-green);
+    }
     .switch_lang-select {
         width: 20rem;
         left: 50%;
         transform: translateX(-50%);
     }
-    h2 {
+    .section_title {
         font-size: 2.4rem;
         margin-bottom: 3rem;
     }
-    h2::before {
+    .section_title::before {
         font-size: 2rem;
     }
     .content p {
@@ -1288,25 +1350,44 @@ footer .conditions {
         padding: 6rem 4rem;
         width: 100%; */
     }
-    .social_networks .social_networks-container {
-        margin-bottom: 6rem;
-    }
-    .social_networks-feed {
+    .social_networks .social_networks-feed {
+        /* margin-bottom: 6rem; */
+        margin-left: -3rem;
+        padding: 0 3rem;
+        margin-right: 6rem;
+        width: calc(100% + 6rem);
+
+        background-color: linear;
         overflow-y: hidden;
         overflow-x: scroll;
-        scroll-snap-type: x mandatory;
+        /* scroll-snap-type: x mandatory; */
+
+        display: flex;
+        align-items: center;
+        
     }
     .social_networks-feed::-webkit-scrollbar {
-        height: 0;
-        width: 0;
+        margin: 0 auto;
+        height: 0.3rem;
+        background-color: transparent;
+    }
+    .social_networks-feed::-webkit-scrollbar-thumb {
+        border-radius: 1px;
+        background-color: rgba(0, 0, 0, 0.1);
     }
     .social_networks-feed-card {
-        width: 100%;
+        margin: 0 1rem;
+        width: calc(100%);
+        min-width: calc(100%);
         max-width: 100%;
         min-width: 100%;
+
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
     }
     .card-blockquote {
-        padding: 4rem 2rem;
+        padding: 4rem 3rem;
+        background: white;
     }
     .card-blockquote > * {
         margin-bottom: 3rem;
@@ -1331,6 +1412,7 @@ footer .conditions {
         transform: translateY(100%);
         box-shadow: 0 2px 0 0 rgb(28, 65, 56);
         cursor: default;
+        display: none;
     }
     #to_left-bttn:active,
     #to_right-bttn:active {
@@ -1373,6 +1455,7 @@ footer .conditions {
     }
 
 
+
     /* SECTION RELEASES */
     .releases {
         padding: 4rem 3rem;
@@ -1385,10 +1468,21 @@ footer .conditions {
         font-size: 2rem;
     }
     .releases_controller-item {
-        margin: 0.5rem 1rem;
+        width:          1.4rem;
+        height:         1.4rem;
+        min-width:      1.4rem;
+        min-height:     1.4rem;
+
+        margin:         0.6rem 1rem;
+        cursor:         default;
     }
     .releases_controller .active_item {
-        margin: 0 0.5rem;
+        width:          2.2rem;
+        height:         2.2rem;
+        min-width:      2.2rem;
+        min-height:     2.2rem;
+
+        margin:         0.2rem 0.6rem;
     }
 
 
